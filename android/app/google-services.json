@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "606247997753",
+    "project_id": "quick-doctor-aa597",
+    "storage_bucket": "quick-doctor-aa597.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606247997753:android:5b1c79119d13d15b6a18e8",
+        "android_client_info": {
+          "package_name": "com.revelutio.quick_doctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606247997753-2lc6jk46sbns156mgvrj52cvjsserhsg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFiDRauS0gdeWkNcI5ENb6YEENqLXWpk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606247997753-2lc6jk46sbns156mgvrj52cvjsserhsg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
