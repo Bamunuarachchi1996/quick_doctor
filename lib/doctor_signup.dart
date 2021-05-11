@@ -13,7 +13,7 @@ class DoctorSignup extends StatefulWidget {
 class _DoctorSignupState extends State<DoctorSignup> {
   final UserModel _user = UserModel();
   String _password = "";
-  List _types = ["eye", "dental", "heart"];
+  List _types = ["family physicians", "emergency physicians", "General Physicians","Pediatricians","General Surgeons","Cardiologists","Dentists","Dermatologists","Gynaecologists","ENT specialist","VOG","radiologists"];
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentType;
   

@@ -2,7 +2,7 @@ import 'package:firebase_helpers/firebase_helpers.dart';
 
 class EventModel {
   final String doc_id;
-  final String id;
+  final String id,uniq_id;
   final String patient;
   final String doctor;
   final String illness;
@@ -11,13 +11,14 @@ class EventModel {
   final DateTime eventDate;
 
   EventModel(
-      {this.doc_id, this.id, this.doctor, this.patient, this.illness, this.timeSlot, this.status = "pending", this.eventDate});
+      {this.doc_id, this.id,this.uniq_id ,this.doctor, this.patient, this.illness, this.timeSlot, this.status = "pending", this.eventDate});
 
   factory EventModel.fromMap(Map data) {
     return EventModel(
       doctor: data["doctor"],
       patient: data["patient"],
       doc_id: data['doc_id'],
+      uniq_id: data['uniq_id'],
       illness: data['illness'],
       timeSlot: data['timeSlot'],
       status: data['status'],
@@ -47,6 +48,7 @@ class EventModel {
       "status": status,
       "event_date": eventDate,
       "id": id,
+      "uniq_id": uniq_id
     };
   }
 }

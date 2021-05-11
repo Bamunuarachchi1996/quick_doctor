@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_doctor/about_us.dart';
 import 'package:quick_doctor/models/userModel.dart';
-
+import 'package:quick_doctor/event_firestore_service.dart';
+import 'package:quick_doctor/services/database.dart';
+import 'package:quick_doctor/utils/utils.dart';
 import 'package:quick_doctor/viewmodels/appoinments_view_model.dart';
 import 'package:quick_doctor/views/homepage.dart';
 
@@ -15,20 +17,26 @@ import 'package:quick_doctor/views/homepage.dart';
 _buildTextView(String text) {
   return Container(
     alignment: Alignment.centerLeft,
-    child: Text(text, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+    child: Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
   );
 }
 
-class AppointmentsForPatient extends StatelessWidget {
+class AppointmentsForPatient extends StatefulWidget {
   final UserModel user;
 
   const AppointmentsForPatient({Key key, this.user}) : super(key: key);
 
   @override
+  _AppointmentsForPatientState createState() => _AppointmentsForPatientState();
+}
+
+class _AppointmentsForPatientState extends State<AppointmentsForPatient> {
+  bool isUpdating = false;
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: ChangeNotifierProvider(
-        create: (context) => AppointmentsViewModel(user.id, "patient"),
+        create: (context) => AppointmentsViewModel(widget.user.id, "patient"),
         child: Scaffold(
             appBar: AppBar(
               title: Text(
@@ -64,34 +72,73 @@ class AppointmentsForPatient extends StatelessWidget {
                   Container(
                     child: Consumer<AppointmentsViewModel>(builder: (context, model, child) {
                       return model.event != null && model.event.length > 0
-                          ? ListView(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.only(top: 30, left: 40, right: 40, bottom: 40),
-                              children: model.event.map((e) {
-                                return GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 140,
-                                    child: SingleChildScrollView(
+                          ? Container(
+                            height: MediaQuery.of(context).size.height/ 1.3,
+                            child: ListView(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                padding: EdgeInsets.only(top: 30, left: 0, right: 0, bottom: 40),
+                                children: model.event.map((e) {
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      // height: 140,
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                      decoration:
+                                          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                                       child: Column(
                                         children: [
                                           //Text(e.date),
-                                          _buildTextView("Dr." + e.doctor),
-                                          _buildTextView("Illness : " + e.illness),
-                                          _buildTextView(e.eventDate.year.toString() +
+                                          _buildTextView("@Dr. ${e.doctor}"),
+                                          _buildTextView("Illness : ${e.illness}"),
+                                          _buildTextView("Date : " +
+                                              e.eventDate.year.toString() +
                                               "-" +
                                               e.eventDate.month.toString() +
                                               "-" +
-                                              e.eventDate.day.toString() +
-                                              " _ "+
-                                              "${e.eventDate}"),
+                                              e.eventDate.day.toString()),
+                                          _buildTextView("Time : ${e.timeSlot}"),
+                                          e.status == "cancelled"
+                                              ? Text(
+                                                  "The user canclled this appoinment",
+                                                  style: TextStyle(color: Colors.red),
+                                                )
+                                              : Container(),
+                                          isUpdating
+                                              ? CircularProgressIndicator()
+                                              : e.status == "cancelled"
+                                                  ? Container()
+                                                  : ElevatedButton.icon(
+                                                      onPressed: () async {
+                                                        setState(() {
+                                                          isUpdating = true;
+                                                        });
+                                                        Database db = Database();
+                                                        db.deleteField(e.uniq_id).then((value) {
+                                                          if (value) {
+                                                            setState(() {
+                                                              isUpdating = false;
+                                                            });
+                                                            Navigator.pop(context);
+                                                          } else {
+                                                            setState(() {
+                                                              isUpdating = false;
+                                                            });
+                                                            Dialogs.errorDialog(
+                                                                context, "error", "something went wrong");
+                                                          }
+                                                        });
+                                                      },
+                                                      icon: Icon(Icons.cancel),
+                                                      label: Text("Cancel Appointment"))
                                         ],
                                       ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                            )
+                                  );
+                                }).toList(),
+                              ),
+                          )
                           : Container();
                     }),
                   ),

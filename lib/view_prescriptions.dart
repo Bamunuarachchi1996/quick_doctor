@@ -10,7 +10,7 @@ import 'viewmodels/patient_record_viewmodel.dart';
 _buildTextView(String text) {
   return Container(
     alignment: Alignment.centerLeft,
-    child: Text(text, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+    child: Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
   );
 }
 
@@ -89,7 +89,7 @@ class _ViewPrescriptionsState extends State<ViewPrescriptions> {
                       return model.medicines != null && model.medicines.length > 0
                           ? ListView(
                               shrinkWrap: true,
-                              padding: EdgeInsets.only(top: 30, left: 40, right: 40, bottom: 40),
+                              padding: EdgeInsets.only(top: 30, left: 0, right: 0, bottom: 40),
                               children: model.medicines.map((e) {
                                 return GestureDetector(
                                   onTap: () {
@@ -147,11 +147,20 @@ class _ViewPrescriptionsState extends State<ViewPrescriptions> {
                                             ));
                                   },
                                   child: Container(
-                                    height: 100,
+                                    margin: EdgeInsets.only(bottom: 10),
+                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white, borderRadius: BorderRadius.circular(15)),
                                     child: Column(
                                       children: [
                                         //Text(e.date),
-                                        _buildTextView(e.date),
+                                        ElevatedButton(onPressed: () {}, child: Text("Illness:  ${e.illness}")),
+                                                _buildTextView("Allergies : ${e.allergies}"),
+                                                _buildTextView("Days since : ${e.daysSince}"),
+                                                _buildTextView("Days since : ${e.duration}"),
+                                                _buildTextView("Medicines : ${e.medicines}"),
+                                                _buildTextView("Comments from doctor : ${e.comments}"),
+                                                _buildTextView(e.date),
                                       ],
                                     ),
                                   ),

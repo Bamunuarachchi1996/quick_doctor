@@ -16,7 +16,7 @@ class PharmSignup extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pharmacy Registration',
+          'Hospital Registration',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.green,

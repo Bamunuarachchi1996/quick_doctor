@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_doctor/about_us.dart';
+import 'package:quick_doctor/doc_Profile_Main.dart';
 import 'package:quick_doctor/loginpage.dart';
 import 'package:quick_doctor/models/userModel.dart';
 import 'package:quick_doctor/view_prescriptions.dart';
 
 import 'package:quick_doctor/viewmodels/patient_search_viewmodel.dart';
+import 'package:quick_doctor/viewmodels/search_viewmodel.dart';
 import 'package:quick_doctor/views/homepage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -137,7 +139,42 @@ class PharmProfile extends StatelessWidget {
                       ),
                       Center(
                         child: Text(
-                          'Search Prescription',
+                          'Search Patients',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20,),
+            GestureDetector(
+              onTap: () {
+                showSearch(context: context, delegate: SearchDocdata());
+                //Navigator.of(context).pushNamed('/appointmentsfordoctor');
+              },
+              child: Container(
+                height: 80.0,
+                color: Colors.transparent,
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1.5,
+                        style: BorderStyle.solid,
+                      ),
+                      borderRadius: BorderRadius.circular(60.0)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(child: FaIcon(FontAwesomeIcons.search)),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Center(
+                        child: Text(
+                          'Search Doctors',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                         ),
                       )
@@ -242,6 +279,83 @@ class Searchdata extends SearchDelegate<String> {
 
                     // ExtendedNavigator.of(context).push(Routes.viewPrescriptions,
                     //     arguments: ViewPrescriptionsArguments(user: model.users[index]));
+                  },
+                  leading: Icon(Icons.person_rounded),
+                  title: RichText(
+                    text: TextSpan(
+                        text: model.users[index].name.substring(0, query.length),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          TextSpan(
+                              text: model.users[index].name.substring(query.length),
+                              style: TextStyle(color: Colors.grey))
+                        ]),
+                  ),
+                ),
+                itemCount: model.users.length,
+              )
+            : Container();
+      }),
+    );
+  }
+}
+
+class SearchDocdata extends SearchDelegate<String> {
+  SearchViewModel viewModel = SearchViewModel("doctor");
+  @override
+  String get searchFieldLabel => "Search Doctor";
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation,
+        ),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    if (query.isNotEmpty) {
+      viewModel.query(query);
+    }
+
+    return ChangeNotifierProvider(
+      create: (context) => viewModel,
+      child: Consumer<SearchViewModel>(builder: (context, model, child) {
+        return model.users != null
+            ? ListView.builder(
+                itemBuilder: (context, index) => ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DocProfileMain(user: model.users[index], type: "hospital")));
+
+                    // ExtendedNavigator.of(context).push(Routes.docProfileMain,
+                    //     arguments: DocProfileMainArguments(user: model.users[index], type: "patient"));
                   },
                   leading: Icon(Icons.person_rounded),
                   title: RichText(

@@ -17,10 +17,7 @@ class Database {
     UserModel user,
   ) async {
     try {
-      await _firestore
-          .collection(userPath)
-          .doc(user.id)
-          .set(user.toMap());
+      await _firestore.collection(userPath).doc(user.id).set(user.toMap());
       return true;
     } catch (e) {
       print(e);
@@ -32,10 +29,7 @@ class Database {
     Medicine medicine,
   ) async {
     try {
-      await _firestore
-          .collection(patient)
-          .doc(medicine.id)
-          .set(medicine.toMap());
+      await _firestore.collection(patient).doc(medicine.id).set(medicine.toMap());
       return true;
     } catch (e) {
       print(e);
@@ -45,8 +39,7 @@ class Database {
 
   Future<UserModel> getUser(String uid) async {
     try {
-      DocumentSnapshot snapshot =
-          await _firestore.collection(userPath).doc(uid).get();
+      DocumentSnapshot snapshot = await _firestore.collection(userPath).doc(uid).get();
       return UserModel.fromMap(snapshot.data());
     } catch (e) {
       print(e);
@@ -56,8 +49,7 @@ class Database {
 
   Future<Medicine> getMedi(String id) async {
     try {
-      DocumentSnapshot snapshot =
-          await _firestore.collection(patient).doc(id).get();
+      DocumentSnapshot snapshot = await _firestore.collection(patient).doc(id).get();
       return Medicine.fromMap(snapshot.data());
     } catch (e) {
       print(e);
@@ -69,10 +61,7 @@ class Database {
     try {
       print("User: $uid");
       List<Medicine> medicines = List();
-      QuerySnapshot snapshot = await _firestore
-          .collection(patient)
-          .where("patient_id", isEqualTo: uid)
-          .get();
+      QuerySnapshot snapshot = await _firestore.collection(patient).where("patient_id", isEqualTo: uid).get();
       print("Snaps : $snapshot");
       for (DocumentSnapshot r in snapshot.docs) {
         Medicine model = Medicine.fromMap(r.data());
@@ -88,10 +77,7 @@ class Database {
     try {
       print("User: $uid");
       List<UserModel> user = List();
-      QuerySnapshot snapshot = await _firestore
-          .collection(userPath)
-          .where("id", isEqualTo: uid)
-          .get();
+      QuerySnapshot snapshot = await _firestore.collection(userPath).where("id", isEqualTo: uid).get();
       print("Snaps : $snapshot");
       for (DocumentSnapshot r in snapshot.docs) {
         UserModel model = UserModel.fromMap(r.data());
@@ -107,10 +93,7 @@ class Database {
     try {
       // print("User: $uid");
       List<UserModel> user = List();
-      QuerySnapshot snapshot = await _firestore
-          .collection(userPath)
-          .where("userType", isEqualTo: "Hospital")
-          .get();
+      QuerySnapshot snapshot = await _firestore.collection(userPath).where("userType", isEqualTo: "Hospital").get();
       print("Snaps : $snapshot");
       for (DocumentSnapshot r in snapshot.docs) {
         UserModel model = UserModel.fromMap(r.data());
@@ -126,10 +109,7 @@ class Database {
     try {
       // print("User: $uid");
       List<UserModel> user = List();
-      QuerySnapshot snapshot = await _firestore
-          .collection(userPath)
-          .where("userType", isEqualTo: "Doctor")
-          .get();
+      QuerySnapshot snapshot = await _firestore.collection(userPath).where("userType", isEqualTo: "Doctor").get();
       print("Snaps : $snapshot");
       for (DocumentSnapshot r in snapshot.docs) {
         UserModel model = UserModel.fromMap(r.data());
@@ -141,14 +121,11 @@ class Database {
     }
   }
 
-    Future<List<UserModel>> getDocCat(String cat) async {
+  Future<List<UserModel>> getDocCat(String cat) async {
     try {
       print("User: $cat");
       List<UserModel> user = List();
-      QuerySnapshot snapshot = await _firestore
-          .collection(userPath)
-          .where("docCat", isEqualTo: cat)
-          .get();
+      QuerySnapshot snapshot = await _firestore.collection(userPath).where("docCat", isEqualTo: cat).get();
       print("Snaps : ${snapshot.docs.length}");
       for (DocumentSnapshot r in snapshot.docs) {
         UserModel model = UserModel.fromMap(r.data());
@@ -166,10 +143,7 @@ class Database {
       print("User: $uid");
       if (type == "doctor") {
         List<EventModel> event = List();
-        QuerySnapshot snapshot = await _firestore
-            .collection(appointment)
-            .where("doc_id", isEqualTo: uid)
-            .get();
+        QuerySnapshot snapshot = await _firestore.collection(appointment).where("doc_id", isEqualTo: uid).get();
         print("Snaps : $snapshot");
         for (DocumentSnapshot r in snapshot.docs) {
           EventModel model = EventModel.fromMap(r.data());
@@ -179,10 +153,7 @@ class Database {
         return event;
       } else {
         List<EventModel> event = List();
-        QuerySnapshot snapshot = await _firestore
-            .collection(appointment)
-            .where("id", isEqualTo: uid)
-            .get();
+        QuerySnapshot snapshot = await _firestore.collection(appointment).where("id", isEqualTo: uid).get();
         print("Snaps : $snapshot");
         for (DocumentSnapshot r in snapshot.docs) {
           EventModel model = EventModel.fromMap(r.data());
@@ -194,5 +165,15 @@ class Database {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<bool> deleteField(String uniqid) async {
+    return await _firestore.collection(appointment).doc(uniqid).update({'status': 'cancelled'}).then((value) {
+      print("cancelled");
+      return true;
+    }).catchError((error) {
+      print("Failed to cancel user's property: $error");
+      return false;
+    });
   }
 }

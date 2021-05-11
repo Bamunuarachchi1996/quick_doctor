@@ -9,7 +9,7 @@ import 'package:quick_doctor/views/homepage.dart';
 _buildTextView(String text) {
   return Container(
     alignment: Alignment.centerLeft,
-    child: Text(text, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+    child: Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
   );
 }
 
@@ -57,34 +57,42 @@ class AppointmentsForDoctor extends StatelessWidget {
                   Container(
                     child: Consumer<AppointmentsViewModel>(builder: (context, model, child) {
                       return model.event != null && model.event.length > 0
-                          ? ListView(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.only(top: 30, left: 40, right: 40, bottom: 40),
-                              children: model.event.map((e) {
-                                return GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 140,
-                                    child: SingleChildScrollView(
+                          ? Container(
+                            height: MediaQuery.of(context).size.height/ 1.3,
+                                                      child: ListView(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.only(top: 30, left: 0, right: 0, bottom: 40),
+                                children: model.event.map((e) {
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                     margin: EdgeInsets.only(bottom: 10),
+                                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                        decoration:
+                                            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                                       child: Column(
                                         children: [
                                           //Text(e.date),
-                                          _buildTextView("Patient : " + e.patient),
-                                          _buildTextView("Illness : " + e.illness),
-                                          _buildTextView(e.eventDate.year.toString() +
+                                           _buildTextView("Patient : ${e.patient}"),
+                                          _buildTextView("Illness : ${e.illness}"),
+                                          _buildTextView("Date : " +
+                                              e.eventDate.year.toString() +
                                               "-" +
                                               e.eventDate.month.toString() +
                                               "-" +
-                                              e.eventDate.day.toString() +
-                                              " _ " +
-                                              e.timeSlot),
+                                              e.eventDate.day.toString()),
+                                          _buildTextView("Time : ${e.timeSlot}"),
+                                          ElevatedButton.icon(
+                                              onPressed: () {},
+                                              icon: Icon(Icons.cancel),
+                                              label: Text("Reject Appointment"))
                                         ],
                                       ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                            )
+                                  );
+                                }).toList(),
+                              ),
+                          )
                           : Container();
                     }),
                   ),

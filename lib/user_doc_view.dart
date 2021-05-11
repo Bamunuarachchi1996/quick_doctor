@@ -11,7 +11,7 @@ import 'viewmodels/patient_record_viewmodel.dart';
 _buildTextView(String text) {
   return Container(
     alignment: Alignment.centerLeft,
-    child: Text(text, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+    child: Text(text, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
   );
 }
 
@@ -372,11 +372,20 @@ class _UserDocViewState extends State<UserDocView> {
                                                   ));
                                         },
                                         child: Container(
-                                          height: 100,
+                                          margin: EdgeInsets.only(bottom: 10),
+                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                      decoration:
+                                          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                                           child: Column(
                                             children: [
                                               //Text(e.date),
-                                              _buildTextView(e.date),
+                                               ElevatedButton(onPressed: (){}, child: Text("Illness:  ${e.illness}")),
+                                                _buildTextView("Allergies : ${e.allergies}"),
+                                                _buildTextView("Days since : ${e.daysSince}"),
+                                                _buildTextView("Days since : ${e.duration}"),
+                                                _buildTextView("Medicines : ${e.medicines}"),
+                                                _buildTextView("Comments from doctor : ${e.comments}"),
+                                                _buildTextView(e.date),
                                             ],
                                           ),
                                         ),

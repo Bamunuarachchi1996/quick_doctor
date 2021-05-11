@@ -267,7 +267,14 @@ class DocProfileMain extends StatelessWidget {
                                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                                   ),
                                 )
-                              else
+                              else if(type == "hospital")
+                                Center(
+                                  child: Text(
+                                    ' Current Appointments',
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                                  ),
+                                )
+                                else
                                 Center(
                                   child: Text(
                                     ' Current Appointments',
